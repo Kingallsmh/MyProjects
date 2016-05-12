@@ -1,5 +1,5 @@
 Personal Project AbsorbCore
-The goal of the project was to play with simple physics components that are found in video games.  The little character can jump, fall, move left to right as per standard platformer gameplay but I wanted to have some mechanics with the character that would introduce different ways of travelling a video game world. I added the ability to hang onto walls and ceilings as well as being able to traverse the different surfaces.
+The goal of the project was to play with simple physics components that are found in video games.  The little character can jump, fall, move left to right as per standard platformer gameplay but I wanted to have some mechanics with the character that would introduce different ways of travelling in a video game world. I added the ability to hang onto walls and ceilings as well as being able to traverse the different surfaces.
 Goals for the project:
 -Learn about animating sprites through programming
 -Learn how to manage objects and their properties like their hitboxes
