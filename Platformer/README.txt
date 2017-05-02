@@ -11,3 +11,5 @@ Future goals for this project:
 -Add a second player that interacts with previous player
 -Add another movement mechanic
 -add dynamic camera movement
+
+Download the .jar file to give it a try!
