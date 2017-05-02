@@ -14,3 +14,5 @@ Rules of the game:
 
 How to play:
 -Use the keyboard directional arrows to move your square around the screen. 
+
+You can play the game by downloading the .jar file.
