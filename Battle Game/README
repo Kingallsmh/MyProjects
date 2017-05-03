@@ -1,0 +1,41 @@
+This project is a couple of months of work to try to put together a platformer type game. Inspiration was drawn from both the Mega Man and Pokemon. There was a lot of things I wanted to have as part of this project. Still a lot to come.
+
+Goals:
+-Have different characters to be played, all of which that can have different stats or moves/mechanics
+-Stage that interacts with the characters with varying degrees
+-Attacks that have different shapes, trajectories, damage types
+-Animated backgrounds
+-Switch between an overworld view and battles
+-Typical RPG mechanics such as having a party of characters, stats, types that are not normally associated with platformer type games
+-Items to use in or out of battle
+
+Known issues with current issue:
+-Balancing of attacks and stats (not in progress until other mechanics are finished)
+-When a character has died while attacking with a melee weapon, weapon does not disappear and will continue to damage
+-If a character was to a bigger character and the new characters hitbox reaches into terrain, the new character will be stuck
+
+Future updates:
+-Fix for weapon bug and stuck character
+-Items for use in battle and ability to use in battle
+-Dangerous terrain (Damaging spots/examples: spikes, lava pools)
+-AI for the second player
+
+Controls:
+  Player 1:
+  -w,a,s,d for movement
+  -v,b,n,m for different attacks
+  -spacebar for pause menu
+  
+  Player 2:
+  -arrow keys for movement
+  -numpad 0, 1, 2, 3 for different attacks
+  -right_shift for pause menu
+  
+-Each character has health(the green bar segments) and energy(the blue bar segments) and each player has a timer bar(purple bar) of which restricts using the pause menu too often.
+-Taking dmg reduces health, when health is 0, the character dies and the switch menu comes up.
+-Using attacks uses the blue bar which will refill over time. Weapons do not use any energy.
+-When the timer bar is full, that player can go into the pause menu.
+-In pause menu, press down to go into party switch menu. Use the corresponding arrows to switch the current character to a new one.
+First button or pause button will go exit the pause state where the second button will exit to main pause menu.
+
+Download the .jar file to run the program.
