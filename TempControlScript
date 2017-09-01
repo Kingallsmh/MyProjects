@@ -1,3 +1,8 @@
+https://forum.unity3d.com/threads/how-to-script-a-good-rigidbody-controller.152026/
+https://forum.unity3d.com/threads/wow-camera-movement.16949/
+http://wiki.unity3d.com/index.php?title=RigidbodyFPSWalker
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,18 +10,20 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour {
 
     Rigidbody rBody;
-    float maxSpeed = 10.0f;
+    float maxSpeed = 4.0f;
     public bool grounded;
-	public float gravity = 10.0f;
-	public float maxVelocityChange = 10.0f;
+    public float gravityChange = 1f, tempGravity = 0f;
+	public float maxVelocityChange = 1.0f;
 	public bool canJump = true;
-	public float jumpHeight = 2.0f;
-    Vector3 speeds;
+	public float jump = 50.0f;
+    Vector3 speeds = new Vector3();
+    Vector3 addSpeed = new Vector3();
 
     // Use this for initialization
     void Start () {
         rBody = GetComponent<Rigidbody>();
 		rBody.freezeRotation = true;
+
 		rBody.useGravity = false;
 	}
 
@@ -29,6 +36,7 @@ public class PlayerControl : MonoBehaviour {
     {
         SetOnFloor();
         MovePlayer();
+        InputControl();
     }
 
     // Update is called once per frame
@@ -36,46 +44,64 @@ public class PlayerControl : MonoBehaviour {
         
 	}
 
+    public void InputControl(){
+        addSpeed = transform.TransformDirection(speeds);
+        if (!grounded){
+            addSpeed.y -= tempGravity;
+        }
+
+        Debug.Log("Before: " + speeds.x + " " + speeds.y + " " + speeds.z);
+        //speeds = transform.TransformDirection(speeds);
+        Debug.Log(addSpeed.x + " " + addSpeed.y + " " + addSpeed.z);
+        rBody.velocity = addSpeed;
+        grounded = false;
+    }
+
     public void MovePlayer(){
 		
 			// Calculate how fast we should be moving
-			Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-			targetVelocity = transform.TransformDirection(targetVelocity);
-			targetVelocity *= maxSpeed;
+        Vector3 targetVelocity = new Vector3(Input.GetAxisRaw("Horizontal") * maxSpeed, speeds.y, Input.GetAxisRaw("Vertical") * maxSpeed);
+        //targetVelocity = transform.TransformDirection(targetVelocity);
+
+        speeds = targetVelocity;
 
 			// Apply a force that attempts to reach our target velocity
-			Vector3 velocity = rBody.velocity;
-			Vector3 velocityChange = (targetVelocity - velocity);
-			velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-			velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-			velocityChange.y = 0;
-			rBody.AddForce(velocityChange, ForceMode.VelocityChange);
+		//Vector3 velocity = rBody.velocity;
+		//Vector3 velocityChange = (targetVelocity - velocity);
+  //      velocityChange.magnitude
+		//velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+		//velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+		//velocityChange.y = 0;
+            
+        //rBody.AddForce(velocityChange.z * transform.forward);
+        //rBody.AddForce(velocityChange, ForceMode.VelocityChange);
 		if (grounded)
 		{
+            tempGravity = 0f;
+            speeds.y = 0f;
 			// Jump
 			if (canJump && Input.GetButton("Jump"))
 			{
-				rBody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+                speeds.y += jump;
 			}
 		}
-
-		// We apply gravity manually for more tuning control
-		rBody.AddForce(new Vector3(0, -gravity * rBody.mass, 0));
-
-		grounded = false;
-        //speeds.z = Input.GetAxis("Vertical") * Time.deltaTime *  maxSpeed;
-        //speeds.x = Input.GetAxis("Horizontal") * Time.deltaTime * maxSpeed;
-
+        else{
+            Gravity();
+        }
         //rBody.velocity = (speeds);
+    }
+
+    public void Gravity(){
+        tempGravity += gravityChange;
     }
 
     public void SetOnFloor(){
 		Ray ray = new Ray(transform.position, -transform.up);
 		RaycastHit hit;
-		Physics.Raycast(ray, out hit);
+		Physics.Raycast(ray, out hit, 5f);
 		if (hit.normal != Vector3.zero)
 		{
-			transform.up = hit.normal;
+            transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
 		}
     }
 
@@ -83,11 +109,5 @@ public class PlayerControl : MonoBehaviour {
 	{
 		grounded = true;
 	}
-
-	float CalculateJumpVerticalSpeed()
-	{
-		// From the jump height and gravity we deduce the upwards speed 
-		// for the character to reach at the apex.
-		return Mathf.Sqrt(2 * jumpHeight * gravity);
-	}
 }
+
