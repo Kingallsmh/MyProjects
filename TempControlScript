@@ -1,0 +1,93 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerControl : MonoBehaviour {
+
+    Rigidbody rBody;
+    float maxSpeed = 10.0f;
+    public bool grounded;
+	public float gravity = 10.0f;
+	public float maxVelocityChange = 10.0f;
+	public bool canJump = true;
+	public float jumpHeight = 2.0f;
+    Vector3 speeds;
+
+    // Use this for initialization
+    void Start () {
+        rBody = GetComponent<Rigidbody>();
+		rBody.freezeRotation = true;
+		rBody.useGravity = false;
+	}
+
+    private void Update()
+    {
+        
+    }
+
+    private void FixedUpdate()
+    {
+        SetOnFloor();
+        MovePlayer();
+    }
+
+    // Update is called once per frame
+    void Fixed () {
+        
+	}
+
+    public void MovePlayer(){
+		
+			// Calculate how fast we should be moving
+			Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+			targetVelocity = transform.TransformDirection(targetVelocity);
+			targetVelocity *= maxSpeed;
+
+			// Apply a force that attempts to reach our target velocity
+			Vector3 velocity = rBody.velocity;
+			Vector3 velocityChange = (targetVelocity - velocity);
+			velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+			velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+			velocityChange.y = 0;
+			rBody.AddForce(velocityChange, ForceMode.VelocityChange);
+		if (grounded)
+		{
+			// Jump
+			if (canJump && Input.GetButton("Jump"))
+			{
+				rBody.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+			}
+		}
+
+		// We apply gravity manually for more tuning control
+		rBody.AddForce(new Vector3(0, -gravity * rBody.mass, 0));
+
+		grounded = false;
+        //speeds.z = Input.GetAxis("Vertical") * Time.deltaTime *  maxSpeed;
+        //speeds.x = Input.GetAxis("Horizontal") * Time.deltaTime * maxSpeed;
+
+        //rBody.velocity = (speeds);
+    }
+
+    public void SetOnFloor(){
+		Ray ray = new Ray(transform.position, -transform.up);
+		RaycastHit hit;
+		Physics.Raycast(ray, out hit);
+		if (hit.normal != Vector3.zero)
+		{
+			transform.up = hit.normal;
+		}
+    }
+
+	void OnCollisionStay()
+	{
+		grounded = true;
+	}
+
+	float CalculateJumpVerticalSpeed()
+	{
+		// From the jump height and gravity we deduce the upwards speed 
+		// for the character to reach at the apex.
+		return Mathf.Sqrt(2 * jumpHeight * gravity);
+	}
+}
