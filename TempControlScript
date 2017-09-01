@@ -1,6 +1,7 @@
 https://forum.unity3d.com/threads/how-to-script-a-good-rigidbody-controller.152026/
 https://forum.unity3d.com/threads/wow-camera-movement.16949/
 http://wiki.unity3d.com/index.php?title=RigidbodyFPSWalker
+http://answers.unity3d.com/questions/468330/character-that-climbs-everything-including-on-ceil.html
 
 
 using System.Collections;
